@@ -1,0 +1,11 @@
+---
+- name: Install NGINX and setup web page
+  hosts: workers
+  become: yes
+
+  tasks:
+    - name: Start and enable NGINX service
+      service:
+        name: nginx
+        state: started
+        enabled: yes

@@ -1,0 +1,10 @@
+---
+- name: Uninstall NGINX and Remove Setup
+  hosts: workers
+  become: yes
+
+  tasks:
+    - name: Stop NGINX service
+      service:
+        name: nginx
+        state: stopped

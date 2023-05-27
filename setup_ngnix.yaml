@@ -1,0 +1,33 @@
+---
+- name: Install NGINX and setup web page
+  hosts: workers
+  become: yes
+
+  tasks:
+    - name: Install NGINX
+      apt:
+        name: nginx
+        state: present
+        update_cache: yes
+
+    - name: Start and enable NGINX service
+      service:
+        name: nginx
+        state: started
+        enabled: yes
+
+    - name: Add worker-specific NGINX web page
+      copy:
+        content: "{{ hostvars[inventory_hostname]['worker_specific_contents'][inventory_hostname] }}"
+        dest: /var/www/html/index.nginx-debian.html
+        owner: www-data
+        group: www-data
+        mode: "0644"
+
+    - name: Create a new user
+      user:
+        name: newuser
+        password: "{{ 'newpassword' | password_hash('sha512') }}"
+        shell: /bin/bash
+        groups: sudo
+        append: yes
